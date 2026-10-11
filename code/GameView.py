@@ -1,6 +1,7 @@
 import arcade
 
 class GameView(arcade.View):
+    
     pass
 
 class PauseMenu(arcade.View):
