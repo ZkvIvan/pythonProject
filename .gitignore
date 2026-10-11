@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Виртуальные окружения
+.venv/
+venv/
+env/
+ENV/
+
+# uv
+.python-version
+uv.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Прочее
+*.log
+build/
+dist/
+*.egg-info/
+.pytest_cache/
