@@ -1,15 +1,13 @@
 # ============================================================
-# Education.py — экран обучения (пока заглушка).
-# Кнопка «Обучение» в главном меню теперь открывает его,
-# а ESC возвращает обратно.
+# Education.py — экран обучения (заглушка).
 # ============================================================
 
 import arcade
 
+from Audio import start_menu_music
+
 
 class EducationView(arcade.View):
-    """Экран обучения (заглушка)."""
-
     def __init__(self):
         super().__init__()
         self.title = arcade.Text(
@@ -26,6 +24,7 @@ class EducationView(arcade.View):
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.BLACK)
+        start_menu_music()
 
     def on_draw(self):
         self.clear()
@@ -37,6 +36,6 @@ class EducationView(arcade.View):
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.ESCAPE:
-            # Импорт внутри метода — иначе циклический импорт с Menu.py
-            from Menu import MainMenu
+            # Локальный импорт — избегаем циклической зависимости
+            from MainMenu import MainMenu
             self.window.show_view(MainMenu())

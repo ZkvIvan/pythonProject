@@ -1,47 +1,44 @@
 # ============================================================
-# Main.py — точка входа в игру.
-# Здесь создаётся окно, показывается главное меню и запускается
-# главный цикл arcade.
+# Main.py — точка входа.
+# Лежит в корне проекта, но код — в code/.
 # ============================================================
 
-# ВАЖНО: настройки pyglet для звука должны быть установлены ДО import arcade,
-# иначе pyglet уже выберет драйвер по умолчанию и настройка не подействует.
+import sys
+import os
+
+# Добавляем папку code/ в путь поиска модулей,
+# чтобы работали импорты вида `from Settings import settings`.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(_HERE, "code"))
+
+# ВАЖНО: настройки pyglet ДО import arcade.
 import pyglet
-# Список драйверов по приоритету: pulse → openal → directsound → silent.
-# silent — «заглушка», если ни один драйвер не запустился.
 pyglet.options['audio'] = ('pulse', 'openal', 'directsound', 'silent')
 
 import arcade
-from Menu import MainMenu, StartWindow, get_monitor_info
 from Settings import settings
+from utils import load_fonts, get_monitor_info, StartWindow
+from MainMenu import MainMenu
 
 
 def main():
-    # Берём сохранённые настройки. Если файла нет — это дефолты.
-    # Не даём окну быть больше монитора (в settings.json может лежать
-    # разрешение от другого экрана, например 2560x1440 на ноутбуке).
+    load_fonts()
+
     mon_w, mon_h, _ = get_monitor_info()
     width = min(settings.get("resolution_width"), mon_w)
     height = min(settings.get("resolution_height"), mon_h)
-    fullscreen = settings.get("fullscreen")
-    vsync = settings.get("vsync")
 
-    # Создаём окно с нужными параметрами
     window = StartWindow(
         width=width,
         height=height,
-        fullscreen=fullscreen,
-        vsync=vsync,
+        fullscreen=settings.get("fullscreen"),
+        vsync=settings.get("vsync"),
         title="NightFall",
     )
 
-    # Показываем главное меню как активную сцену
     window.show_view(MainMenu())
-
-    # Главный цикл — работает, пока окно открыто
     arcade.run()
 
 
-# Запускаем main() только если файл запущен напрямую (не импортирован)
 if __name__ == "__main__":
     main()
