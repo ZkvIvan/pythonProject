@@ -18,8 +18,8 @@ def load_ui_sounds():
     if _UI_SOUNDS is None:
         try:
             _UI_SOUNDS = (
-                arcade.load_sound(asset("sounds", "hover.wav")),
-                arcade.load_sound(asset("sounds", "click.wav")),
+                arcade.load_sound(asset("sounds", "hover_opt.wav")),
+                arcade.load_sound(asset("sounds", "click_opt.wav")),
             )
             print("[sound] UI-звуки загружены")
         except Exception as e:
@@ -52,7 +52,7 @@ def load_music():
     if _MUSIC is None:
         try:
             _MUSIC = arcade.load_sound(
-                asset("sounds", "main_menu_ambient.wav"),
+                asset("sounds", "main_menu_ambient_fixed1.ogg"),
                 streaming=False,
             )
             print("[music] музыка загружена")
