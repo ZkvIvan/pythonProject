@@ -5,6 +5,7 @@
 import math
 import arcade
 import arcade.gui
+from arcade import gl
 
 from Audio import stop_menu_music
 from ui_widgets import SoundButton, make_style, CLEAR
@@ -105,4 +106,4 @@ class MainMenu(MenuView):
         self.title_shadow.draw()
         self.title_text.draw()
 
-        self.manager.draw()
+        self.manager.draw(filter=gl.NEAREST)
