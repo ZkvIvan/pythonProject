@@ -66,7 +66,7 @@ class GameView(arcade.View):
         self.enemy.draw()
 
     def end_turn(self):
-        print('TURN ENDED')
+        self.player.moves = 3
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button == arcade.MOUSE_BUTTON_LEFT:
@@ -77,22 +77,22 @@ class GameView(arcade.View):
                 if sprite.slot.y > 2:
                     break
 
-                if sprite.player == self.player and self.player.can_move():
-                    self.player.moves -= 1
-                    print(self.player.moves)
-
+                if sprite.player == self.player:
                     if self.player.active:
                         self.player.active.deselect()
 
                     self.player.active = sprite
                     sprite.select()
-
-                    if not self.player.can_move():
-                        self.end_turn()
                 else:
+                    self.player.moves -= 1
+                    print(self.player.moves)
+
                     if self.player.active:
                         sprite.deal_damage(self.player.active)
                         self.player.active.deal_damage(sprite)
+
+                    if not self.player.can_move():
+                        self.end_turn()
 
             if hit_sprites:
                 return
