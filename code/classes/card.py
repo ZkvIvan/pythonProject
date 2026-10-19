@@ -6,7 +6,7 @@ from utils import FONT_TITLE
 
 class Card(arcade.Sprite):
 	def __init__(self, view, player, hp, strength, texture_name):
-		super().__init__('images/cards/' + texture_name + '.png')
+		super().__init__('images/cards/' + texture_name + ('_enemy' if player.is_enemy else '') + '.png')
 		self.texture_name = texture_name
 		self.view = view
 		self.player = player
@@ -64,7 +64,7 @@ class Card(arcade.Sprite):
 		self.scale = 7
 
 	def deselect(self):
-		self.texture = arcade.load_texture('images/cards/' + self.texture_name + '.png')
+		self.texture = arcade.load_texture('images/cards/' + self.texture_name + ('_enemy' if self.player.is_enemy else '') + '.png')
 		self.scale = 6.5
 
 	def deal_damage(self, from_card):

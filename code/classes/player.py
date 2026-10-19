@@ -12,7 +12,7 @@ class Player:
 		self.cards = []
 		self.active = None
 		self.moves = 3
-		self.hp = 30
+		self.hp = 100
 		self.is_enemy = is_enemy
 
 		self.hp_text = arcade.Text(
@@ -88,9 +88,8 @@ class Player:
 
 		self.hp_text.text = str(self.hp)
 
-		#if self.hp <= 0:
-		#	self.player.remove_card(self)
-		#	self.slot.remove_card()
-		#	self.view.heart_sprite_list.remove(self.heart)
-		#	self.view.sword_sprite_list.remove(self.sword)
-		#	self.view.card_sprite_list.remove(self)
+		if self.hp <= 0:
+			if self.is_enemy:
+				self.view.on_win()
+			else:
+				self.view.on_loose()

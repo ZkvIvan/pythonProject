@@ -89,6 +89,10 @@ class GameView(arcade.View):
     def end_turn(self, *args):
         self.player.moves = 3
 
+        for x in range(5, 9):
+            if self.grid.slots[(x, 2)].card is not None and self.grid.slots[(x, 2)].card.player == self.player:
+                self.enemy.deal_damage(self.grid.slots[(x, 2)].card)
+
         for _ in range(3):
             self.enemy.select_best()
             if self.enemy.active:
@@ -107,6 +111,10 @@ class GameView(arcade.View):
                     #self.player.deal_damage(self.enemy.active)
             else:
                 break
+
+        for x in range(5, 9):
+            if self.grid.slots[(x, 2)].card is not None and self.grid.slots[(x, 2)].card.player == self.enemy:
+                self.player.deal_damage(self.grid.slots[(x, 2)].card)
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button == arcade.MOUSE_BUTTON_LEFT:
@@ -147,6 +155,12 @@ class GameView(arcade.View):
                 if self.player.active:
                     self.player.active.slot.remove_card()
                     sprite.add_card(self.player.active)
+
+    def on_win(self):
+        self.window.show_view(WinMenu())
+
+    def on_loose(self):
+        self.window.show_view(LooseMenu())
 
 
 class PauseMenu(arcade.View):
