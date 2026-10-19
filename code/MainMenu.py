@@ -35,7 +35,8 @@ class MainMenu(MenuView):
 
     def _start_game(self, _event):
         stop_menu_music()
-        self.window.show_view(GameView())
+        from CharacterSelectView import CharacterSelectView
+        self.window.show_view(CharacterSelectView())
 
     def _open_settings(self, _event):
         from SettingMenu import SettingMenu

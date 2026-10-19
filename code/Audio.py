@@ -98,3 +98,44 @@ def update_music_volume():
             )
         except Exception:
             pass
+
+# ------------------------------------------------------------
+# Звуки игрового процесса (sounds/<имя>.wav)
+# Нет файла — просто тишина (один раз пишем в консоль).
+# Хотите свой звук — положите файл с тем же именем в sounds/.
+# ------------------------------------------------------------
+GAME_SOUNDS = (
+    "card_select",    # выбрал карту
+    "card_deselect",  # снял выбор
+    "card_place",     # выложил карту на стол
+    "error",          # нельзя (нет энергии, неверный слот)
+    "end_turn",       # нажал «Завершить»
+    "enemy_place",    # враг выложил карту
+    "fight_start",    # началась фаза боя
+    "hit",            # карта бьёт карту
+    "hero_hit",       # урон герою
+    "card_death",     # карта погибла
+    "turn_start",     # начался ход игрока
+    "victory",
+    "defeat",
+)
+_GAME_SOUNDS = {}
+
+
+def preload_game_sounds():
+    for name in GAME_SOUNDS:
+        _load_game_sound(name)
+
+
+def _load_game_sound(name):
+    if name not in _GAME_SOUNDS:
+        try:
+            _GAME_SOUNDS[name] = arcade.load_sound(asset("sounds", f"{name}.wav"))
+        except Exception as e:
+            print(f"[sound] нет звука '{name}': {e}")
+            _GAME_SOUNDS[name] = None
+    return _GAME_SOUNDS[name]
+
+
+def play_game_sound(name, volume=None):
+    play_sfx(_load_game_sound(name), volume)

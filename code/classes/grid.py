@@ -12,21 +12,17 @@ class Grid:
         self._update_slot(slot)
 
     def _update_slot(self, slot):
-        w, h = self.view.window.width, self.view.window.height
-        
-        # Слоты по центру стола (от 20% до 80% ширины)
-        start_x = w * 0.20
-        end_x = w * 0.80
-        total_slots = 6
-        step_x = (end_x - start_x) / (total_slots - 1)
-        
-        slot.center_x = start_x + (slot.grid_x - 2) * step_x
-        
-        if slot.grid_y == 1:
-            slot.center_y = h * 0.32 
-        else:
-            slot.center_y = h * 0.68 
-        
+        # Позиции берём из единого лэйаута GameView (view.lay)
+        L = self.view.lay
+
+        slot.center_x = L.slot_x0 + (slot.grid_x - 2) * L.slot_step
+        slot.center_y = L.enemy_row_y if slot.grid_y == 3 else L.player_row_y
+
+        # Хитбокс слота должен совпадать с нарисованным (120s x 170s)
+        if getattr(slot, "_applied_s", None) != L.s:
+            slot.scale = L.s
+            slot._applied_s = L.s
+
         if slot.card:
             slot.card.center_x = slot.center_x
             slot.card.center_y = slot.center_y
