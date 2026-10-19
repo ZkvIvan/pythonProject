@@ -4,19 +4,21 @@
 
 import arcade
 import arcade.gui
-
 from Audio import update_music_volume
+from menu_base import MenuView
 from Settings import settings
 from ui_widgets import ToggleButton, make_style
-from menu_base import MenuView
-from utils import FONT_UI, get_monitor_info, apply_video_settings
+from utils import FONT_UI, apply_video_settings, get_monitor_info
 
 
 class SettingMenu(MenuView):
-    def __init__(self):
+    def __init__(self, return_to=None):
         super().__init__()
         self.current_tab = "audio"
         self.resolutions = self._get_available_resolutions()
+
+        self.return_to = return_to # Запоминаем, откуда пришли
+        self.current_tab = "audio"
 
         self.title_text = arcade.Text(
             text="НАСТРОЙКИ", x=0, y=0,
@@ -48,6 +50,14 @@ class SettingMenu(MenuView):
         from MainMenu import MainMenu
         self.window.show_view(MainMenu())
 
+        if self.return_to:
+            # Если пришли из паузы, возвращаемся туда
+            self.window.show_view(self.return_to)
+        else:
+            # Если из главного меню, идем туда
+            from MainMenu import MainMenu
+            self.window.show_view(MainMenu())
+
     def _switch_tab(self, tab_name):
         self.current_tab = tab_name
         self.request_rebuild()
@@ -64,7 +74,7 @@ class SettingMenu(MenuView):
         if not settings.get("fullscreen"):
             try:
                 self.window.set_exclusive_mouse(False)
-            except Exception:
+            except Exception:  # noqa: BLE001, S110
                 pass
 
     def _on_vsync_change(self, _enabled):
@@ -331,6 +341,6 @@ class SettingMenu(MenuView):
         if key == arcade.key.ESCAPE:
             try:
                 self.window.set_exclusive_mouse(False)
-            except Exception:
+            except Exception:  # noqa: BLE001, S110
                 pass
             self._go_back()

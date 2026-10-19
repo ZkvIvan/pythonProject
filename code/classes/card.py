@@ -1,81 +1,53 @@
 import arcade
-from arcade import gl
-
-from utils import FONT_TITLE
-
+from paths import asset
 
 class Card(arcade.Sprite):
-	def __init__(self, view, player, hp, strength, texture_name):
-		super().__init__('images/cards/' + texture_name + '.png')
-		self.texture_name = texture_name
-		self.view = view
-		self.player = player
-		self.hp = hp
-		self.strength = strength
-		self.slot = None
+    def __init__(self, view, player, hp, strength, texture_name, description=""):
+        super().__init__(asset("images", "Cards", f"{texture_name}.png"))
+        self.texture_name = texture_name
+        self.view = view
+        self.player = player
+        self.hp = hp
+        self.strength = strength
+        self.description = description
+        self.slot = None
+        self.is_selected = False
+        
+        self.base_scale = 1.0 
+        self.scale = self.base_scale
 
-		self.scale = 6.5
+    def select(self):
+        self.scale = 1.1 
+        self.is_selected = True
 
-		self.view.card_sprite_list.append(self)
+    def deselect(self):
+        self.scale = self.base_scale
+        self.is_selected = False
 
-		self.heart = arcade.Sprite('images/cards/heart.png')
-		self.heart.scale = self.scale[0] / 2
-		self.view.heart_sprite_list.append(self.heart)
+    def draw_highlight(self):
+        if self.is_selected:
+            import math
+            w = self.width
+            h = self.height
+            inset = 0 
+            
+            left = self.center_x - w / 2 + inset
+            bottom = self.center_y - h / 2 + inset
+            width = w - (inset * 2)
+            height = h - (inset * 2)
+            
+            pulse_alpha = 150 + int(math.sin(self.view.time * 5) * 105)
+            color = (255, 50, 50, pulse_alpha)
+            
+            arcade.draw_lbwh_rectangle_outline(
+                left, bottom, width, height, color, 10 
+            )
 
-		self.sword = arcade.Sprite('images/cards/sword.png')
-		self.sword.scale = self.scale[0] / 2
-		self.view.sword_sprite_list.append(self.sword)
+    def deal_damage(self, from_card):
+        self.hp -= from_card.strength
+        self.hp = max(0, self.hp)
 
-		self.hp_text = arcade.Text(
-			text=str(self.hp), x=0, y=0,
-			color=arcade.color.Color.from_hex_string('89000f'),
-			font_size=25, font_name=FONT_TITLE
-		)
-
-		self.sword_text = arcade.Text(
-			text=str(self.strength), x=0, y=0,
-			color=arcade.color.Color.from_hex_string('848484'),
-			font_size=25, font_name=FONT_TITLE
-		)
-
-	def on_draw(self, x):
-		#self.center_x = self.view.window.width / 2 + ((len(self.player.cards) - 1) / 2 - x) * 150
-		#self.center_y = self.view.window.height / 2 + (y - 0.5) * 170
-		self.heart.center_x = self.center_x + self.scale[0] * 4.25
-		self.heart.center_y = self.center_y + self.scale[0] * 8.25
-		self.sword.center_x = self.center_x - self.scale[0] * 4.25
-		self.sword.center_y = self.center_y - self.scale[0] * 8.25
-
-		if len(str(self.hp)) == 1:
-			self.hp_text.x = self.center_x + self.scale[0] * 1.25
-		else:
-			self.hp_text.x = self.center_x + self.scale[0] * 0.25
-		self.hp_text.y = self.center_y + self.scale[0] * 6.5
-
-		self.sword_text.x = self.center_x - self.scale[0] * 2
-		self.sword_text.y = self.center_y - self.scale[0] * 10
-
-	def draw(self):
-		self.hp_text.draw()
-		self.sword_text.draw()
-
-	def select(self):
-		self.texture = arcade.load_texture('images/cards/' + self.texture_name + '_select.png')
-		self.scale = 7
-
-	def deselect(self):
-		self.texture = arcade.load_texture('images/cards/' + self.texture_name + '.png')
-		self.scale = 6.5
-
-	def deal_damage(self, from_card):
-		self.hp -= from_card.strength
-		self.hp = max(0, self.hp)
-
-		self.hp_text.text = str(self.hp)
-
-		if self.hp <= 0:
-			self.player.remove_card(self)
-			self.slot.remove_card()
-			self.view.heart_sprite_list.remove(self.heart)
-			self.view.sword_sprite_list.remove(self.sword)
-			self.view.card_sprite_list.remove(self)
+        if self.hp <= 0:
+            self.player.remove_card(self)
+            if self.slot:
+                self.slot.remove_card()

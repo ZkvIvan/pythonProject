@@ -3,8 +3,8 @@
 # Лежит в корне проекта, но код — в code/.
 # ============================================================
 
-import sys
 import os
+import sys
 
 # Добавляем папку code/ в путь поиска модулей,
 # чтобы работали импорты вида `from Settings import settings`.
@@ -13,12 +13,13 @@ sys.path.insert(0, os.path.join(_HERE, "code"))
 
 # ВАЖНО: настройки pyglet ДО import arcade.
 import pyglet
+
 pyglet.options['audio'] = ('pulse', 'openal', 'directsound', 'silent')
 
 import arcade
-from Settings import settings
-from utils import load_fonts, get_monitor_info, StartWindow
 from MainMenu import MainMenu
+from Settings import settings
+from utils import StartWindow, get_monitor_info, load_fonts
 
 
 def main():
