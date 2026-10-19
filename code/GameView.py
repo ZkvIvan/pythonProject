@@ -4,9 +4,11 @@
 # PerformanceWarning и работает быстрее).
 # ============================================================
 import random
+import time
 
 import arcade
 from arcade import gl
+import arcade.gui
 
 from classes.player import Player
 from classes.slot import Slot
@@ -34,7 +36,7 @@ class GameView(arcade.View):
                 self.grid.add_slot(i, j, Slot(self))
 
         self.player = Player(self)
-        self.enemy = Player(self)
+        self.enemy = Player(self, is_enemy=True)
 
         for i in range(6):
             q = Card(self, self.player, random.randint(1, 15), random.randint(1, 15), 'card_test')
@@ -51,8 +53,25 @@ class GameView(arcade.View):
             self.enemy.cards.append(q)
             self.grid.add_card(i + 5, 2, q)
 
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+
+        end_button = arcade.gui.UIFlatButton(text="End turn", width=300, height=150)
+        end_button.on_click = self.end_turn
+        self.layout = arcade.gui.UIAnchorLayout(
+        )
+
+        self.layout.add(end_button.with_padding(all=50), anchor_x='left', anchor_y='bottom')
+        self.manager.add(
+            self.layout
+        )
+
     def on_draw(self):
         self.clear()
+
+        self.layout.width = self.window.width
+        self.layout.height = self.window.height
+
         self.player.on_draw()
         self.enemy.on_draw()
         self.grid.on_draw()
@@ -65,8 +84,29 @@ class GameView(arcade.View):
         self.player.draw()
         self.enemy.draw()
 
-    def end_turn(self):
+        self.manager.draw()
+
+    def end_turn(self, *args):
         self.player.moves = 3
+
+        for _ in range(3):
+            self.enemy.select_best()
+            if self.enemy.active:
+                print('damage', self.enemy.active.strength)
+                most_dangerous = self.player.get_most_dangerous()
+                #time.sleep(0.5)
+                if most_dangerous:
+                    most_dangerous.deal_damage(self.enemy.active)
+                else:
+                    for x in range(5, 9):
+                        if not self.grid.slots[(x, 2)].card:
+                            print('MOVED')
+                            self.enemy.active.slot.remove_card()
+                            self.grid.slots[(x, 2)].add_card(self.enemy.active)
+                            #time.sleep(0.5)
+                    #self.player.deal_damage(self.enemy.active)
+            else:
+                break
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button == arcade.MOUSE_BUTTON_LEFT:
