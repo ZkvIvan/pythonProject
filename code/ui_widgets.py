@@ -1,11 +1,3 @@
-# ============================================================
-# ui_widgets.py — визуальные элементы интерфейса:
-#   - AnimatedBackground (спрайт-анимация)
-#   - make_style (сборка стиля кнопки)
-#   - SoundButton (кнопка с hover/click звуками)
-#   - ToggleButton (кнопка ВКЛ/ВЫКЛ)
-# ============================================================
-
 import arcade
 import arcade.gui
 
@@ -14,14 +6,12 @@ from Settings import settings
 from utils import FONT_UI, BG_FRAME_DURATION
 
 
-# Цвета стиля
 GRAY = (90, 90, 90, 255)
 CLEAR = (0, 0, 0, 0)
 
 
 def make_style(font_size, normal_border=GRAY, normal_border_width=1,
                font_color=arcade.color.WHITE):
-    """Стиль кнопки: прозрачный фон, рамка; hover/press — яркая рамка."""
     UIStyle = arcade.gui.UIFlatButton.UIStyle
 
     def state(color, border, border_width):
@@ -42,7 +32,6 @@ def make_style(font_size, normal_border=GRAY, normal_border_width=1,
 
 
 class AnimatedBackground(arcade.Sprite):
-    """Спрайт с покадровой анимацией."""
     def __init__(self, textures, frame_duration=BG_FRAME_DURATION, scale=1.0):
         super().__init__(textures[0], scale=scale)
         self.frames = textures
@@ -59,7 +48,6 @@ class AnimatedBackground(arcade.Sprite):
 
 
 class SoundButton(arcade.gui.UIFlatButton):
-    """Кнопка с звуками наведения и клика."""
     def __init__(self, *args, hover_sound=None, click_sound=None,
                  callback=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -84,7 +72,6 @@ class SoundButton(arcade.gui.UIFlatButton):
 
 
 class ToggleButton(arcade.gui.UIFlatButton):
-    """Кнопка-переключатель ВКЛ/ВЫКЛ, хранящая состояние в settings."""
     @staticmethod
     def _style_for(state, font_size):
         if state:

@@ -1,7 +1,3 @@
-# ============================================================
-# utils.py — пути, шрифты, монитор, видео-настройки.
-# ============================================================
-
 import os
 import arcade
 import pyglet
@@ -15,10 +11,6 @@ FONT_TITLE = "Vyaz Pixel"
 FONT_UI = "Cyrillic Pixel-7"
 BG_FRAME_DURATION = 1.0
 
-
-# ------------------------------------------------------------
-# Загрузка шрифтов
-# ------------------------------------------------------------
 def _load_font(file_names):
     for folder in ("fonts", ""):
         for name in file_names:
@@ -35,9 +27,6 @@ def load_fonts():
     _load_font(["cyrillic_pixel-7.ttf", "Cyrillic Pixel-7.ttf"])
 
 
-# ------------------------------------------------------------
-# Монитор
-# ------------------------------------------------------------
 def get_monitor_info():
     try:
         width, height = arcade.get_display_size()
@@ -56,9 +45,6 @@ def get_monitor_info():
     return width, height, refresh_rate
 
 
-# ------------------------------------------------------------
-# Видео-настройки
-# ------------------------------------------------------------
 def apply_video_settings(window):
     try:
         mon_w, mon_h, _ = get_monitor_info()
@@ -80,9 +66,6 @@ def apply_video_settings(window):
         print(f"[video] не удалось применить настройки: {e}")
 
 
-# ------------------------------------------------------------
-# Кадры фоновой анимации
-# ------------------------------------------------------------
 _BG_FRAMES = None
 
 
@@ -99,10 +82,6 @@ def load_bg_frames():
             _BG_FRAMES = []
     return _BG_FRAMES
 
-
-# ------------------------------------------------------------
-# StartWindow
-# ------------------------------------------------------------
 class StartWindow(arcade.Window):
     MIN_WIDTH = 1280
     MIN_HEIGHT = 720

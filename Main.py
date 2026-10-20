@@ -1,13 +1,6 @@
-# ============================================================
-# Main.py — точка входа.
-# Лежит в корне проекта, но код — в code/.
-# ============================================================
-
 import os
 import sys
 
-# Добавляем папку code/ в путь поиска модулей,
-# чтобы работали импорты вида `from Settings import settings`.
 _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(_HERE, "code"))
 

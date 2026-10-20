@@ -1,0 +1,35 @@
+{
+  "hero_id": "beastmaster",
+  "player_name": "Жнец",
+  "night": 1,
+  "money": 50,
+  "xp": 0,
+  "level": 1,
+  "owned_cards": [
+    "01",
+    "07",
+    "11",
+    "13",
+    "23",
+    "28"
+  ],
+  "deck": [
+    "01",
+    "07",
+    "11",
+    "13",
+    "23",
+    "28"
+  ],
+  "owned_utils": [
+    "util_18",
+    "util_01",
+    "util_13"
+  ],
+  "utils": [
+    "util_18",
+    "util_01",
+    "util_13"
+  ],
+  "last_rewards": null
+}

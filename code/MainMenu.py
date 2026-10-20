@@ -1,8 +1,5 @@
-# ============================================================
-# MainMenu.py — главное меню.
-# ============================================================
-
 import math
+import os
 import arcade
 import arcade.gui
 from arcade import gl
@@ -11,7 +8,8 @@ from Audio import stop_menu_music
 from ui_widgets import SoundButton, make_style, CLEAR
 from menu_base import MenuView
 from utils import FONT_TITLE
-from GameView import GameView
+from paths import data
+from profile import Profile
 
 
 class MainMenu(MenuView):
@@ -31,12 +29,19 @@ class MainMenu(MenuView):
             anchor_x="left", anchor_y="top",
         )
 
-    # ---------------- Действия кнопок ----------------
-
-    def _start_game(self, _event):
+    def _start_new_game(self, _event):
         stop_menu_music()
         from CharacterSelectView import CharacterSelectView
         self.window.show_view(CharacterSelectView())
+
+    def _continue_game(self, _event):
+        stop_menu_music()
+        prof = Profile.load()
+        if prof and prof.night > 1:
+            from IntermissionView import IntermissionView
+            self.window.show_view(IntermissionView(prof, prof.night))
+        else:
+            self._start_new_game(_event)
 
     def _open_settings(self, _event):
         from SettingMenu import SettingMenu
@@ -49,23 +54,38 @@ class MainMenu(MenuView):
     def _exit(self, _event):
         arcade.exit()
 
-    # ---------------- UI ----------------
-
     def _build_ui(self):
         s = self.ui_scale()
         w = self.window.width
 
+        has_save = False
+        if os.path.exists(data("profile.json")):
+            prof = Profile.load()
+            if prof and prof.night > 1:
+                has_save = True
+
         gap = int(30 * s)
-        btn_w = int(min(280 * s, (w * 0.94 - 3 * gap) / 4))
+        
+        if has_save:
+            btn_w = int(min(220 * s, (w * 0.94 - 4 * gap) / 5))
+            items = [
+                ("Продолжить", self._continue_game),
+                ("Новая игра", self._start_new_game),
+                ("Настройки", self._open_settings),
+                ("Обучение", self._open_education),
+                ("Выход", self._exit),
+            ]
+        else:
+            btn_w = int(min(280 * s, (w * 0.94 - 3 * gap) / 4))
+            items = [
+                ("Начать игру", self._start_new_game),
+                ("Настройки", self._open_settings),
+                ("Обучение", self._open_education),
+                ("Выход", self._exit),
+            ]
+
         btn_h = int(100 * s)
         style = make_style(int(28 * s), CLEAR, 0)
-
-        items = [
-            ("Начать игру", self._start_game),
-            ("Настройки", self._open_settings),
-            ("Обучение", self._open_education),
-            ("Выход", self._exit),
-        ]
 
         h_box = arcade.gui.UIBoxLayout(vertical=False, space_between=gap)
         for text, callback in items:

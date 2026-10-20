@@ -1,7 +1,3 @@
-# ============================================================
-# Education.py — экран обучения (заглушка).
-# ============================================================
-
 import arcade
 
 from Audio import start_menu_music
@@ -16,7 +12,7 @@ class EducationView(arcade.View):
             anchor_x="center", anchor_y="center",
         )
         self.hint = arcade.Text(
-            "Скоро здесь появится обучение.  ESC — назад", 0, 0,
+            "Карты, деньги, два обучения", 0, 0,
             arcade.color.LIGHT_GRAY,
             font_size=20, font_name="Cyrillic Pixel-7",
             anchor_x="center", anchor_y="center",
@@ -36,6 +32,5 @@ class EducationView(arcade.View):
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.ESCAPE:
-            # Локальный импорт — избегаем циклической зависимости
             from MainMenu import MainMenu
             self.window.show_view(MainMenu())

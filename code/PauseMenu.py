@@ -1,7 +1,3 @@
-# ============================================================
-# PauseMenu.py — меню паузы.
-# ============================================================
-
 import arcade
 import arcade.gui
 from Audio import start_menu_music
@@ -22,8 +18,6 @@ class PauseMenu(MenuView):
             anchor_x="center", anchor_y="center",
         )
 
-    # ---------------- Действия кнопок ----------------
-
     def _resume(self, _event):
         self.window.show_view(self.game_view)
 
@@ -38,7 +32,6 @@ class PauseMenu(MenuView):
     def _exit_game(self, _event):
         arcade.exit()
 
-    # ---------------- UI ----------------
 
     def _build_ui(self):
         s = self.ui_scale()

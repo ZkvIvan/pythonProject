@@ -1,17 +1,9 @@
-# ============================================================
-# Audio.py — звуки интерфейса и музыка меню.
-# ============================================================
-
 import arcade
+
 from Settings import settings
 from paths import asset
 
-
-# ------------------------------------------------------------
-# UI-звуки (hover, click)
-# ------------------------------------------------------------
 _UI_SOUNDS = None
-
 
 def load_ui_sounds():
     global _UI_SOUNDS
@@ -38,11 +30,6 @@ def play_sfx(sound, volume=None):
     except Exception as e:
         print(f"[sound] не удалось проиграть: {e}")
 
-
-# ------------------------------------------------------------
-# Музыка меню
-# Без streaming=True — иначе source нельзя воспроизвести повторно.
-# ------------------------------------------------------------
 _MUSIC = None
 _MUSIC_PLAYER = None
 
@@ -99,27 +86,22 @@ def update_music_volume():
         except Exception:
             pass
 
-# ------------------------------------------------------------
-# Звуки игрового процесса (sounds/<имя>.wav)
-# Нет файла — просто тишина (один раз пишем в консоль).
-# Хотите свой звук — положите файл с тем же именем в sounds/.
-# ------------------------------------------------------------
 GAME_SOUNDS = (
-    "card_select",    # выбрал карту
-    "card_deselect",  # снял выбор
-    "card_place",     # выложил карту на стол
-    "error",          # нельзя (нет энергии, неверный слот)
-    "end_turn",       # нажал «Завершить»
-    "enemy_place",    # враг выложил карту
-    "fight_start",    # началась фаза боя
-    "hit",            # карта бьёт карту
-    "hero_hit",       # урон герою
-    "card_death",     # карта погибла
-    "turn_start",     # начался ход игрока
-    "victory",
-    "defeat",
+    "card_select", "card_deselect", "card_place", "error",
+    "end_turn", "enemy_place", "fight_start", "hit", "hero_hit",
+    "card_death", "turn_start", "victory", "defeat",
+    "util", "ability", "heal", "buff", "debuff",
+    "coin", "level_up", "buy",
+    "ui_click", "ui_hover", "menu_back",
 )
+
 _GAME_SOUNDS = {}
+
+_ALIASES = {
+    "ui_click": "click_opt",
+    "ui_hover": "hover_opt",
+    "menu_back": "click_opt",
+}
 
 
 def preload_game_sounds():
@@ -129,10 +111,10 @@ def preload_game_sounds():
 
 def _load_game_sound(name):
     if name not in _GAME_SOUNDS:
+        real_name = _ALIASES.get(name, name)
         try:
-            _GAME_SOUNDS[name] = arcade.load_sound(asset("sounds", f"{name}.wav"))
-        except Exception as e:
-            print(f"[sound] нет звука '{name}': {e}")
+            _GAME_SOUNDS[name] = arcade.load_sound(asset("sounds", f"{real_name}.wav"))
+        except Exception:
             _GAME_SOUNDS[name] = None
     return _GAME_SOUNDS[name]
 

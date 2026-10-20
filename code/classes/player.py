@@ -1,38 +1,39 @@
 import random
 
-from classes.card import Card
-
-
 class Player:
-	def __init__(self, view):
-		self.view = view
-		self.cards = []      # Карты на столе
-		self.hand = []       # Карты в руке
-		self.active = None
-		self.moves = 3
-        
-        # Статы для HUD
-		self.max_hp = 100
-		self.hp = 85      
-		self.max_energy = 3
-		self.energy = 3
-		self.level = 1
+    def __init__(self, view, hero_id=None):
+        self.view, self.hero_id = view, hero_id
+        self.cards, self.hand, self.deck, self.discard = [], [], [], []
+        self.active, self.moves = None, 3
+        self.max_hp, self.hp = 100, 100
+        self.max_energy, self.energy, self.level = 3, 3, 1
+        self.immune_turns = 0
+        self.ability_name, self.ability_text, self.ability_used = "", "", False
 
-	def can_move(self):
-		return self.moves > 0
+    def init_deck(self, card_ids):
+        self.deck = list(card_ids)
+        random.shuffle(self.deck)
+        self.discard = []
 
-	def on_draw(self):
-		for ix, card in enumerate(self.cards):
-			card.on_draw(ix)
+    def draw_card_id(self):
+        if not self.deck:
+            if not self.discard: return None
+            self.deck = list(self.discard)
+            self.discard = []
+            random.shuffle(self.deck)
+        return self.deck.pop(0) if self.deck else None
 
-	def draw(self):
-		for card in self.cards:
-			card.draw()
+    def heal(self, amount): self.hp = min(self.max_hp, self.hp + amount)
+    
+    def take_damage(self, amount):
+        if self.immune_turns > 0: return 0
+        self.hp = max(0, self.hp - amount)
+        return amount
 
-	def remove_card(self, card):
-		if self.active == card:
-			self.active = None
-		self.cards.remove(card)
+    def can_move(self): return self.moves > 0
 
-	def turn_end(self):
-		self.moves = 3
+    def remove_card(self, card):
+        if self.active == card: self.active = None
+        if card in self.cards: self.cards.remove(card)
+
+    def turn_end(self): self.moves = 3

@@ -1,7 +1,3 @@
-# ============================================================
-# SettingMenu.py — меню настроек с табами.
-# ============================================================
-
 import arcade
 import arcade.gui
 from Audio import update_music_volume
@@ -17,7 +13,7 @@ class SettingMenu(MenuView):
         self.current_tab = "audio"
         self.resolutions = self._get_available_resolutions()
 
-        self.return_to = return_to # Запоминаем, откуда пришли
+        self.return_to = return_to
         self.current_tab = "audio"
 
         self.title_text = arcade.Text(
@@ -26,8 +22,6 @@ class SettingMenu(MenuView):
             font_size=34, font_name=FONT_UI,
             anchor_x="center", anchor_y="top",
         )
-
-    # ---------------- Разрешения ----------------
 
     def _get_available_resolutions(self):
         mon_w, mon_h, _ = get_monitor_info()
@@ -44,17 +38,13 @@ class SettingMenu(MenuView):
         options.sort(key=lambda r: r[0] * r[1])
         return options
 
-    # ---------------- Навигация / действия ----------------
-
     def _go_back(self):
         from MainMenu import MainMenu
         self.window.show_view(MainMenu())
 
         if self.return_to:
-            # Если пришли из паузы, возвращаемся туда
             self.window.show_view(self.return_to)
         else:
-            # Если из главного меню, идем туда
             from MainMenu import MainMenu
             self.window.show_view(MainMenu())
 
@@ -66,8 +56,6 @@ class SettingMenu(MenuView):
         settings.reset()
         apply_video_settings(self.window)
         self.request_rebuild()
-
-    # ---------------- Обработчики настроек ----------------
 
     def _on_fullscreen_change(self, _is_fullscreen):
         apply_video_settings(self.window)
@@ -89,16 +77,12 @@ class SettingMenu(MenuView):
             return
         apply_video_settings(self.window)
 
-    # ---------------- Раскладка ----------------
-
     def _layout(self):
         super()._layout()
         s = self.ui_scale()
         self.title_text.font_size = int(34 * s)
         self.title_text.x = self.window.width / 2
         self.title_text.y = self.window.height - int(24 * s)
-
-    # ---------------- Построение UI ----------------
 
     def _build_ui(self):
         s = self.ui_scale()
@@ -185,8 +169,6 @@ class SettingMenu(MenuView):
             anchor_y="bottom",
             align_y=int(30 * s),
         )
-
-    # ---------------- Табы ----------------
 
     def _build_audio(self, s):
         box = arcade.gui.UIBoxLayout(vertical=True, space_between=int(24 * s))
@@ -321,8 +303,6 @@ class SettingMenu(MenuView):
             height=int(48 * s),
         ))
         return row
-
-    # ---------------- Lifecycle ----------------
 
     def on_hide_view(self):
         super().on_hide_view()
