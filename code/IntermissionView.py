@@ -21,14 +21,16 @@ class IntermissionView(arcade.View):
             with open(data("utilities.json"), "r", encoding="utf-8") as f:
                 for u in json.load(f): self.utils_by_id[u["id"]] = u
         except Exception as e: print(f"[intermission] data: {e}")
-        self.shop_items, self._reroll_shop()
+        
+        self._reroll_shop()
         self._btn_rects, self.message, self.message_age = [], "", 10.0
         self.last_rewards = getattr(profile, "last_rewards", None)
 
     def on_show_view(self): print(f"[IntermissionView] ночь {self.next_night} — загружен")
 
     def _reroll_shop(self):
-        pool = [cid for cid in self.cards_by_id if cid not in self.profile.owned_cards]; random.shuffle(pool)
+        pool = [cid for cid in self.cards_by_id if cid not in self.profile.owned_cards]
+        random.shuffle(pool)
         self.shop_items = []
         for cid in pool[:4]:
             info = self.cards_by_id[cid]; price = RARITY_PRICE.get(info.get("rarity", "common"), 30) + random.randint(-10, 20)

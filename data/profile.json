@@ -1,35 +1,45 @@
 {
-  "hero_id": "beastmaster",
+  "hero_id": "knight",
   "player_name": "Жнец",
-  "night": 1,
-  "money": 50,
-  "xp": 0,
+  "night": 2,
+  "money": 7,
+  "xp": 40,
   "level": 1,
   "owned_cards": [
+    "03",
+    "10",
+    "12",
+    "31",
+    "33",
     "01",
-    "07",
-    "11",
     "13",
-    "23",
-    "28"
+    "05"
   ],
   "deck": [
-    "01",
-    "07",
-    "11",
-    "13",
-    "23",
-    "28"
+    "31",
+    "12",
+    "10",
+    "03",
+    "33",
+    "05"
   ],
   "owned_utils": [
-    "util_18",
-    "util_01",
-    "util_13"
+    "util_10",
+    "util_08",
+    "util_17"
   ],
   "utils": [
-    "util_18",
-    "util_01",
-    "util_13"
+    "util_17",
+    "util_08",
+    "util_10"
   ],
-  "last_rewards": null
+  "last_rewards": {
+    "money": 24,
+    "xp": 40,
+    "cards": [
+      "13"
+    ],
+    "leveled": false,
+    "new_level": 1
+  }
 }

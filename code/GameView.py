@@ -74,6 +74,13 @@ class GameView(arcade.View):
         except Exception: self.cards_data, self.utilities_data, self.dialogs = [], [], {}
         
         self.cards_by_id, self.utils_by_id = {c["id"]: c for c in self.cards_data}, {u["id"]: u for u in self.utilities_data}
+        
+        # --- ПРИВЯЗКА КОНСТАНТ ДЛЯ battle_ui.py ---
+        self.RARITY = RARITY
+        self.KEYWORD_ICON = KEYWORD_ICON
+        self.KEYWORD_NAME = KEYWORD_NAME
+        self.UTIL_TARGETS = UTIL_TARGETS
+        # ------------------------------------------
 
         self.player = Player(self, hero_id=self.hero_id)
         self.player.max_hp, self.player.hp = self.profile.max_hp, self.profile.max_hp
@@ -357,7 +364,7 @@ class GameView(arcade.View):
     def _apply_selected_util(self):
         util, idx = self.pending_util, self.pending_util_idx
         if not util: return
-        if not (target_type := UTIL_TARGETS.get(util["id"])):
+        if not (target_type := self.UTIL_TARGETS.get(util["id"])):
             if use_utility(self, util["id"], None):
                 self.player.energy -= util.get("cost", 0)
                 if idx is not None: self.player_utilities[idx] = None
@@ -369,7 +376,7 @@ class GameView(arcade.View):
     def _try_apply_pending_util(self, x, y):
         util = self.pending_util
         if not util: return
-        target_type, target = UTIL_TARGETS.get(util["id"]), None
+        target_type, target = self.UTIL_TARGETS.get(util["id"]), None
         if target_type in ("enemy_card", "ally_card"):
             for c in arcade.get_sprites_at_point((x, y), self.card_sprite_list):
                 if target_type == "enemy_card" and c.player == self.enemy and not c.stealth: target = c; break
